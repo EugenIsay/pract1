@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
-
 namespace AvtoIsay
 {
     internal class Avto
     {
+        ConsoleKeyInfo key;
         string num;
         float amount;
         float consumption;
-        int speed = 80;
-        int runway;
-        int time;
+        float speed = 80;
+        float runway;
+        float time;
+        float allway;
+        float x = 0;
         public void info(string num, float amount, float consumption)
         {
             this.num = num;
@@ -25,39 +28,68 @@ namespace AvtoIsay
         {
             amount = top;
         }
-        public void move(int km)
+        public void move(float km)
         {
-            time = speed / km;
-            amount =- time * consumption;
-            if (amount < 0)
+            float t = amount;
+            time = km / speed;
+            t -= time * consumption;
+            if (t < 0)
             {
-                Console.WriteLine("Мы не доедем. Есть заправка?");
+                Console.WriteLine("Мы не доедем. Есть заправка? Напишите y/n");
+                key = Console.ReadKey();
+                Console.WriteLine(" ");
+                switch (key.Key.ToString())
+                {
+                    case "Y":
+                        time = amount / consumption;
+                        km -= speed * time;
+                        Console.WriteLine("Сколько вы хотите заправить?");
+                        t = Convert.ToInt32(Console.ReadLine());
+                        runway += km;
+                        zapravka(t);
+                        move(km);
+                        break;
+                    case "N":
+                        Console.WriteLine($"Пройдено всего {runway}");
+                        Environment.Exit(0);
+                        break;
+                }
             }
-            else if (amount >= 0) 
+            else if (t >= 0) 
             {
-                runway = km;
+                runway += km;
+                Allway(runway);
+                amount = t;
+                coord(runway);
             }
+            
+        }
+        public float Allway(float a)
+        {
+            allway += a;
+            return allway;
+        }
+        private float coord(float c)
+        {
+            x += c;
+            return x;
         }
         public void result()
         {
-            Console.WriteLine(amount);
-            Console.WriteLine(runway);
+            Console.WriteLine($"Осталось топлива {Math.Round(amount, 2)}");
+            Console.WriteLine($"Пройдено за этот раз {Math.Round(runway, 2)}");
+            Console.WriteLine($"Пройдено всего {Math.Round(Allway(0), 2)}");
+            Console.WriteLine($"Пройдено координат по иксу {Math.Round(coord(0), 2)}");
+            runway = 0;
         }
-        //public void slowdown()
+        //public void crush()
         //{
+        //    stop();
 
         //}
-        //public double accel()
+        //public void stop()
         //{
-        //    double a;
-        //    a = speed / 0.00556;
-        //    do
-        //    {
-        //        a = +a;
-        //        time++;
-        //    }
-        //    while (a < time) ;
-        //    return time;
+        //    speed = 0;
         //}
     }
 }

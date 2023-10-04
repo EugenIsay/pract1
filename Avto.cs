@@ -11,7 +11,7 @@ namespace AvtoIsay
     {
         ConsoleKeyInfo key;
         private string num;
-        float value;
+        private float value;
         private float amount;
         private float consumption;
         private float speed = 80;
@@ -37,19 +37,20 @@ namespace AvtoIsay
         }
         public void move(float km)
         {
-            Console.WriteLine(km);
+            Console.WriteLine($" = Нужно проехать {km + runway}");
             float t = amount;
             float s = km - accel() - slowdown();
             time = s / speed;
             t -= (time + float.Parse("0,002778") + float.Parse("0,000825")) * consumption;
             if (t < 0)
             {
-
-                time = (amount / consumption) - (float.Parse("0,002778") + float.Parse("0,000825"));
-                s -= speed * time;
-                runway += km - s + accel() + slowdown();
+                time = (amount - ((float.Parse("0,002778") + float.Parse("0,000825")) * consumption)) / consumption;
+                s -= speed * (time + (float.Parse("0,002778") + float.Parse("0,000825")));
+                runway += km - s;
                 Console.WriteLine($"Номер автомобиля {num}");
                 Console.WriteLine($"Осталось топлива {0}");
+                Console.WriteLine($"Не хватает топлива {Math.Abs(t)}");
+                Console.WriteLine($"Всего проехали {runway + Allway(0)}");
                 Console.WriteLine($"Мы проехали {Math.Round(runway, 2)} км, но топливо кончилось. Есть заправка? Напишите y/n");
                 key = Console.ReadKey();
                 Console.WriteLine(" ");
@@ -61,6 +62,7 @@ namespace AvtoIsay
                         while (value < t)
                         {
                             Console.WriteLine("У нас не настолько большой бак");
+                            Console.WriteLine("Сколько вы хотите заправить?");
                             t = Convert.ToInt32(Console.ReadLine());
                         }
                         zapravka(t);
@@ -69,6 +71,10 @@ namespace AvtoIsay
                     case "N":
                         Console.WriteLine($"Пройдено всего {runway}");
                         Environment.Exit(0);
+                        break;
+                    default:
+                        runway -= km - s;
+                        move(km);
                         break;
                 }
             }
@@ -81,7 +87,7 @@ namespace AvtoIsay
             }
             
         }
-        private float Allway(float a)
+        public float Allway(float a)
         {
             allway += a;
             return allway;
@@ -95,8 +101,8 @@ namespace AvtoIsay
         {
             Console.WriteLine($"Номер автомобиля {num}");
             Console.WriteLine($"Осталось топлива {Math.Round(amount, 2)}");
-            Console.WriteLine($"Пройдено за этот раз {Math.Round(runway, 0)}");
-            Console.WriteLine($"Пройдено всего {Math.Round(Allway(0), 0)}");
+            Console.WriteLine($"Пройдено за этот раз {Math.Round(runway, 2)}");
+            Console.WriteLine($"Пройдено всего {Math.Round(Allway(0), 2)}");
             Console.WriteLine($"Пройдено координат по иксу {Math.Round(coord(0), 2)}");
             Console.WriteLine(" ");
             runway = 0;

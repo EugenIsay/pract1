@@ -1,4 +1,6 @@
 ﻿using AvtoIsay;
+using System.ComponentModel.Design;
+
 class program
 {
     static void Main()
@@ -11,6 +13,7 @@ class program
         Console.WriteLine("Расстояние случайно определяется от 1 км до 3000");
         Random rand = new Random();
         Avto car = new Avto();
+        car.dop(V);
         car.info("1", V, P);
         car.zapravka(V);
         while (true)

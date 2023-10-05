@@ -45,12 +45,13 @@ namespace AvtoIsay
             if (t < 0)
             {
                 time = (amount - ((float.Parse("0,002778") + float.Parse("0,000825")) * consumption)) / consumption;
-                s -= speed * (time + (float.Parse("0,002778") + float.Parse("0,000825")));
+                s -= speed * time;
+                s += accel() + slowdown();
                 runway += km - s;
                 Console.WriteLine($"Номер автомобиля {num}");
                 Console.WriteLine($"Осталось топлива {0}");
-                Console.WriteLine($"Не хватает топлива {Math.Abs(t)}");
-                Console.WriteLine($"Всего проехали {runway + Allway(0)}");
+                Console.WriteLine($"Не хватает топлива {Math.Round(Math.Abs(t). 2)}");
+                Console.WriteLine($"Всего проехали {Math.Round(runway + Allway(0), 2)}");
                 Console.WriteLine($"Мы проехали {Math.Round(runway, 2)} км, но топливо кончилось. Есть заправка? Напишите y/n");
                 key = Console.ReadKey();
                 Console.WriteLine(" ");
